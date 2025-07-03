@@ -86,3 +86,19 @@ section.form form button{
     color:black;
     margin-bottom: 1rem;
 }
+
+@media only screen and (max-width: 420px) {
+    .banner{
+        flex-direction: column;
+        margin-top: 2rem;
+    }
+
+    .banner ul.left, .banner ul.right{
+        width:inherit;
+    }
+
+    .banner ul.left{
+        margin-bottom: 2rem;
+    }
+
+}
