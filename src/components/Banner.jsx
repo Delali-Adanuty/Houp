@@ -1,3 +1,5 @@
+import Form from "./Form"
+
 export default function Banner(){
     return(
             <section className="banner">
@@ -6,6 +8,7 @@ export default function Banner(){
                     <p>Need a ride...  just houp!</p>
                 </ul>
                 <ul className="right">
+                    <Form />
                 </ul>
             </section>
     )

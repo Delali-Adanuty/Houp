@@ -1,25 +1,24 @@
 *{
     margin:0;
     padding: 0;
+    font-family: 'dm sans';
 }
 
 body{
     background-color: #202020;
     color:white;
-    font-family: "dm sans";
 }
 
 .banner{
-    border:1px solid red;   
     width:100vw;
     display: flex;
     height: 40rem;
     margin-top:5rem;
+    justify-content: center;
 }
 
 .banner ul.left{
-    border:1px solid red;
-    width:50vw;
+    width:40vw;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -35,4 +34,55 @@ body{
     text-align: left;
     font-size: 1.1rem;
     width:12rem;
+}
+
+.banner ul.right{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:40vw;
+}
+
+section.form{
+}
+
+section.form form{
+    display: grid;
+}
+
+section.form form input{
+    border:2px solid #b6afaf;
+    outline: none;
+    background-color: #202020;
+    font-size: 1.05rem;
+    color:#b6afaf;
+    padding: .75rem;
+    border-radius: 5px;
+}
+
+section.form form input:focus{
+    border:2px solid white;
+    color:white;
+}
+
+section.form form label{
+    margin-top: 2rem;
+    margin-bottom: .4rem;
+}
+
+section.form a{
+    color:white;
+}
+
+section.form form button{
+    margin-top: 3rem;
+    border:none;
+    outline: none;
+    font-size:1.1rem;
+    font-weight: 700;
+    padding:.85rem 0;
+    border-radius: 5px;
+    background-color: white;
+    color:black;
+    margin-bottom: 1rem;
 }
