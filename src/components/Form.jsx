@@ -1,5 +1,8 @@
 import {app, db} from "../firebase";
-import {getAuth, createUserWithEmailAndPassword} from "firebase/auth"
+import {getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword
+} from "firebase/auth"
 import { useState } from "react";
 import {doc, serverTimestamp, setDoc } from "firebase/firestore";
 
@@ -8,33 +11,54 @@ export default function Form(){
     const auth = getAuth(app);
     const [errorMessage, setErrorMessage] = useState('');
     const [role, setRole] = useState("")
+    const [action, setAction] = useState("signup")
 
 
     async function getData(formData){
         const emailInput = formData.get("email");
         const passwordInput = formData.get("password");
-        const confirmPasswordInput = formData.get("confirm-password");
+        if (action === "signup"){
+            const confirmPasswordInput = formData.get("confirm-password");
 
-        if(passwordInput == confirmPasswordInput){
+            if(passwordInput == confirmPasswordInput){
+                try{
+                    const userCredential = await createUserWithEmailAndPassword(auth, emailInput, passwordInput)
+                    const user = userCredential.user
+                    
+                    await setDoc(doc(db, "users", user.uid), {
+                        email:user.email,
+                        role:role,
+                        createdAt: serverTimestamp()
+                    })
+                }catch(error){
+                    setErrorMessage(error.message)
+                }
+            }else{
+                setErrorMessage("Please the passwords are not the same")
+            }
+        }else{
             try{
-                const userCredential = await createUserWithEmailAndPassword(auth, emailInput, passwordInput)
+                const userCredential = await signInWithEmailAndPassword(auth, emailInput, passwordInput)
                 const user = userCredential.user
-                
-                await setDoc(doc(db, "users", user.uid), {
-                    email:user.email,
-                    role:role,
-                    createdAt: serverTimestamp()
-                })
             }catch(error){
                 setErrorMessage(error.message)
             }
-        }else{
-            setErrorMessage("Please the passwords are not the same")
         }
+
     }
 
     function handleRole(role){
         setRole(role)
+    }
+
+    function switchAction(){
+        setAction(prev => {
+            if (prev === "signup"){
+                return "signin"
+            }else{
+                return "signup"
+            }
+        })
     }
 
     return(
@@ -60,29 +84,34 @@ export default function Form(){
                 placeholder="securepassword@1"
                 id="password"
                 />
-                <label htmlFor="confirm-password">Confirm your password: </label>
-                <input 
-                type="password" 
-                name="confirm-password"
-                placeholder="securepassword@1"
-                id="confirm-password"
-                />
-                <section className="set-role">
-                    <button type="button"
-                    className={`${role=== "rider" ? "active" : ""}  ` }
-                    onClick={() => handleRole("rider")}>
-                        I'm a Rider
-                        </button>
-                    <button type="button"
-                    className={`${role === "driver" ? "active" : ""} `}
-                    onClick={() => handleRole("driver")}>
-                        I'm a Driver
-                        </button>
-                </section>
-                <button disabled={role === "" ? true : false}>Create Account</button>
+                {action === "signup" &&
+                <>
+                    <label htmlFor="confirm-password">Confirm your password: </label>
+                    <input 
+                    type="password" 
+                    name="confirm-password"
+                    placeholder="securepassword@1"
+                    id="confirm-password"
+                    /> 
+                    <section className="set-role">
+                        <button type="button"
+                        className={`${role=== "rider" ? "active" : ""}  ` }
+                        onClick={() => handleRole("rider")}>
+                            I'm a Rider
+                            </button>
+                        <button type="button"
+                        className={`${role === "driver" ? "active" : ""} `}
+                        onClick={() => handleRole("driver")}>
+                            I'm a Driver
+                            </button>
+                    </section>                    
+                </>
+                }
+
+                <button disabled={action === "signup" ? role === "" ? true : false : ""}>{action==="signin" ? "Sign In" : "Create Account"}</button>
                 <div>
-                    <a href="#!" className="switch">
-                        Already have an account? Log In
+                    <a href="#!" className="switch" onClick={switchAction}>
+                        {action === "signup" ? "Already have an account? Log In" : "Create Account"}
                     </a>
                 </div>
             </form>

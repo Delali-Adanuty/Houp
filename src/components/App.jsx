@@ -5,7 +5,6 @@ import { useState } from "react";
 
 export default function App(){
   const [signedIn, setSignedIn] = useState(false)
-  console.log('ei')
 
   const auth = getAuth();
   onAuthStateChanged(auth, (user) => {
