@@ -43,7 +43,13 @@ body{
     width:40vw;
 }
 
-section.form{
+section.form form .error-block{
+    text-align: center;
+    padding: .8rem;
+    margin-bottom: 2rem;
+    border-radius: 5px;
+    background-color: orangered;
+    max-width:22rem;
 }
 
 section.form form{
@@ -75,7 +81,7 @@ section.form a{
 }
 
 section.form form button{
-    margin-top: 3rem;
+    margin-top: 2.4rem;
     border:none;
     outline: none;
     font-size:1.1rem;
@@ -85,6 +91,21 @@ section.form form button{
     background-color: white;
     color:black;
     margin-bottom: 1rem;
+}
+
+section.form form .set-role{
+    display: flex;
+    justify-content: space-around;
+}
+
+section.form form .set-role button{
+    opacity: .5;
+    padding:.85rem 1.5rem;
+    margin-top: 1.5rem;
+}
+
+section.form form .set-role button.active{
+    opacity: 1;
 }
 
 @media only screen and (max-width: 420px) {
