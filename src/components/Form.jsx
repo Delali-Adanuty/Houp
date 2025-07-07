@@ -70,13 +70,17 @@ export default function Form(){
                     </div>
                 }
                 <h1>Create an Account to start Houping!</h1>
-                <label htmlFor="name">Enter your name:</label>
-                <input 
-                type="text" 
-                name="name" 
-                id="name" 
-                required
-                placeholder="John Doe" />
+                {action === "signup" && 
+                <>
+                    <label htmlFor="name">Enter your name:</label>
+                    <input 
+                    type="text" 
+                    name="name" 
+                    id="name" 
+                    required
+                    placeholder="John Doe" />                
+                </>
+}
                 <label htmlFor="email">Enter your email:</label>
                 <input 
                 type="email" 
