@@ -1,5 +1,5 @@
 import Banner from "./Banner"
-import Logged from "./Logged";
+import SubmitRide from "./SubmitRide";
 import {getAuth, onAuthStateChanged} from "firebase/auth"
 import { useState } from "react";
 
@@ -15,7 +15,7 @@ export default function App(){
   return(
     <>
     {signedIn ? 
-    <Logged /> :
+    <SubmitRide /> :
     <Banner />}
     </>
   )

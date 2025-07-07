@@ -1,7 +1,8 @@
 import {app, db} from "../firebase";
 import {getAuth,
     createUserWithEmailAndPassword,
-    signInWithEmailAndPassword
+    signInWithEmailAndPassword,
+    updateProfile
 } from "firebase/auth"
 import { useState } from "react";
 import {doc, serverTimestamp, setDoc } from "firebase/firestore";
@@ -10,13 +11,13 @@ export default function Form(){
     
     const auth = getAuth(app);
     const [errorMessage, setErrorMessage] = useState('');
-    const [role, setRole] = useState("")
     const [action, setAction] = useState("signup")
 
 
     async function getData(formData){
         const emailInput = formData.get("email");
         const passwordInput = formData.get("password");
+        const nameInput = formData.get("name")
         if (action === "signup"){
             const confirmPasswordInput = formData.get("confirm-password");
 
@@ -24,10 +25,14 @@ export default function Form(){
                 try{
                     const userCredential = await createUserWithEmailAndPassword(auth, emailInput, passwordInput)
                     const user = userCredential.user
+
+                     updateProfile(auth.currentUser, {
+                        displayName:nameInput
+                    });
                     
                     await setDoc(doc(db, "users", user.uid), {
                         email:user.email,
-                        role:role,
+                        name:nameInput,
                         createdAt: serverTimestamp()
                     })
                 }catch(error){
@@ -38,17 +43,12 @@ export default function Form(){
             }
         }else{
             try{
-                const userCredential = await signInWithEmailAndPassword(auth, emailInput, passwordInput)
-                const user = userCredential.user
+                await signInWithEmailAndPassword(auth, emailInput, passwordInput)
             }catch(error){
                 setErrorMessage(error.message)
             }
         }
 
-    }
-
-    function handleRole(role){
-        setRole(role)
     }
 
     function switchAction(){
@@ -70,6 +70,13 @@ export default function Form(){
                     </div>
                 }
                 <h1>Create an Account to start Houping!</h1>
+                <label htmlFor="name">Enter your name:</label>
+                <input 
+                type="text" 
+                name="name" 
+                id="name" 
+                required
+                placeholder="John Doe" />
                 <label htmlFor="email">Enter your email:</label>
                 <input 
                 type="email" 
@@ -92,23 +99,11 @@ export default function Form(){
                     name="confirm-password"
                     placeholder="securepassword@1"
                     id="confirm-password"
-                    /> 
-                    <section className="set-role">
-                        <button type="button"
-                        className={`${role=== "rider" ? "active" : ""}  ` }
-                        onClick={() => handleRole("rider")}>
-                            I'm a Rider
-                            </button>
-                        <button type="button"
-                        className={`${role === "driver" ? "active" : ""} `}
-                        onClick={() => handleRole("driver")}>
-                            I'm a Driver
-                            </button>
-                    </section>                    
+                    />               
                 </>
                 }
 
-                <button disabled={action === "signup" ? role === "" ? true : false : ""}>{action==="signin" ? "Sign In" : "Create Account"}</button>
+                <button>{action==="signin" ? "Sign In" : "Create Account"}</button>
                 <div>
                     <a href="#!" className="switch" onClick={switchAction}>
                         {action === "signup" ? "Already have an account? Log In" : "Create Account"}
