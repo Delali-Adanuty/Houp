@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {doc, serverTimestamp, setDoc} from "firebase/firestore";
+import {serverTimestamp, addDoc, collection} from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
 
@@ -17,13 +17,17 @@ export default function SubmitRide(){
         if(!dropoffLocation){
             setErrorMessage("Please enter a valid dropoff location")
         }
+
+
+        const rideId = "ride_" + user.uid + Date.now()
         if(pickupLocation && dropoffLocation){
-            await setDoc(doc(db, "rides", user.uid),{
+            await addDoc(collection(db, "rides"),{
                 riderName: user.displayName,
                 pickupLocation: pickupLocation,
                 dropoffLocation: dropoffLocation,
                 status: "requested",
-                requestedAt:serverTimestamp()
+                requestedAt:serverTimestamp(),
+                rideId: rideId
             });
         }
     }
