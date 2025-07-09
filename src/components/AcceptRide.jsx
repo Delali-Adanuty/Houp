@@ -7,10 +7,13 @@ import {
     setDoc,
     doc
 } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import { db } from "../firebase";
 import { useState, useEffect } from "react";
 
 export default function AcceptRide(){
+    const auth = getAuth()
+    const user = auth.currentUser;
     const [activeRides, setActiveRides] = useState([])
 
     useEffect(() => {
@@ -30,10 +33,8 @@ export default function AcceptRide(){
         return () => unsubscribe();
     }, []);
 
-    console.log(activeRides)
 
     async function AcceptRide(rideId){
-        console.log(rideId)
         const q = query(
             collection(db, "rides"),
             where("rideId", "==", rideId)
@@ -43,23 +44,34 @@ export default function AcceptRide(){
 
         snapshot.forEach((rideDoc) => {
             setDoc(doc(db, "rides", rideDoc.id), {
-                status:"inProgress"
+                status:"inProgress",
+                driver:user.displayName
             }, {merge:true})
         })
+        setDoc(doc(db, "users", user.uid), {
+            isDriving:true
+        }, {merge:true})
     }
 
     const requestedRides = activeRides.map((item) => {
         return (
             <div className="ride" key={item.id}>
-                <p>Ride from {item.pickupLocation} to {item.dropoffLocation} by {item.riderName}</p>
+                <p className="pickup-location">{item.pickupLocation}</p>
+                <p className="pickup-distance">1.7 miles away</p>
+                <p className="to">To:</p>
+                <p className="dropoff-location">{item.dropoffLocation}</p>
+                <p className="dropoff-distance">8.3 miles away</p>
                 <button onClick={() => AcceptRide(item.rideId)}>Accept Ride</button>
             </div>
         )
     })
 
     return(
+        <>
+        <h1 className="rides-heading">Active Rides</h1>
         <section className="rides">
             {requestedRides}
-        </section>
+            </section>        
+        </>
     )
 }

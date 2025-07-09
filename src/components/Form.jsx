@@ -33,7 +33,8 @@ export default function Form(){
                     await setDoc(doc(db, "users", user.uid), {
                         email:user.email,
                         name:nameInput,
-                        createdAt: serverTimestamp()
+                        createdAt: serverTimestamp(),
+                        isDriving:false
                     })
                 }catch(error){
                     setErrorMessage(error.message)
