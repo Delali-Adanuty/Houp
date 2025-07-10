@@ -44,7 +44,7 @@ export default function AcceptRide(){
 
         snapshot.forEach((rideDoc) => {
             setDoc(doc(db, "rides", rideDoc.id), {
-                status:"inProgress",
+                status:"awaitingPickup",
                 driver:user.displayName
             }, {merge:true})
         })

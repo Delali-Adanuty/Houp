@@ -34,7 +34,8 @@ export default function Form(){
                         email:user.email,
                         name:nameInput,
                         createdAt: serverTimestamp(),
-                        isDriving:false
+                        isDriving:false,
+                        isRiding:false
                     })
                 }catch(error){
                     setErrorMessage(error.message)
