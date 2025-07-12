@@ -24,7 +24,6 @@ export default function SubmitRide(){
             setErrorMessage("Please enter a valid dropoff location")
         }
 
-        const rideId = "ride_" + user.uid + Date.now()
         if(pickupLocation && dropoffLocation){
             await addDoc(collection(db, "rides"),{
                 riderName: user.displayName,
@@ -32,9 +31,9 @@ export default function SubmitRide(){
                 dropoffLocation: dropoffLocation,
                 status: "requested",
                 requestedAt:serverTimestamp(),
-                rideId: rideId,
+                riderId: user.uid,
                 riderEmail:user.email
-            });
+            });   
             setDoc(doc(db, "users", user.uid), {
                 isRiding:true
             }, {merge:true})

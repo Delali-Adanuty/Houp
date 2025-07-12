@@ -81,7 +81,8 @@ section.form a{
 
 section form button,
 section.role button,
-section.rides div.ride button{
+section.rides div.ride button,
+section.driver-riding button{
     margin-top: 2.4rem;
     border:none;
     outline: none;
@@ -124,7 +125,8 @@ section.role{
     height: 100vh;
 }
 
-section.role button{
+section.role button,
+section.driver-riding button{
     padding:1rem;
     margin:.5rem .9rem;
     opacity: .87;

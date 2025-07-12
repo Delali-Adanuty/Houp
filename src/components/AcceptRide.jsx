@@ -3,7 +3,6 @@ import {
     onSnapshot,
     query,
     where,
-    getDocs,
     setDoc,
     doc
 } from "firebase/firestore";
@@ -23,9 +22,7 @@ export default function AcceptRide(){
         const unsubscribe =  onSnapshot(q, (snapshot) => {
             const newRides = []
             snapshot.forEach((doc) => {
-                if(doc.data().status === "requested"){
-                    newRides.push({id: doc.id, ...doc.data()})
-                }
+                newRides.push({id: doc.id, ...doc.data()})
             })
             setActiveRides(newRides)
         })    
@@ -35,19 +32,10 @@ export default function AcceptRide(){
 
 
     async function AcceptRide(rideId){
-        const q = query(
-            collection(db, "rides"),
-            where("rideId", "==", rideId)
-        )
-
-        const snapshot = await getDocs(q);
-
-        snapshot.forEach((rideDoc) => {
-            setDoc(doc(db, "rides", rideDoc.id), {
-                status:"awaitingPickup",
-                driver:user.displayName
-            }, {merge:true})
-        })
+        setDoc(doc(db, "rides", rideId), {
+            driverId:user.uid,
+            status:"Awaiting Pickup"
+        }, {merge:true})
         setDoc(doc(db, "users", user.uid), {
             isDriving:true
         }, {merge:true})
@@ -61,7 +49,7 @@ export default function AcceptRide(){
                 <p className="to">To:</p>
                 <p className="dropoff-location">{item.dropoffLocation}</p>
                 <p className="dropoff-distance">8.3 miles away</p>
-                <button onClick={() => AcceptRide(item.rideId)}>Accept Ride</button>
+                <button onClick={() => AcceptRide(item.id)}>Accept Ride</button>
             </div>
         )
     })

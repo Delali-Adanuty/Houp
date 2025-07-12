@@ -5,12 +5,12 @@ import Role from "./Role";
 import {getAuth, onAuthStateChanged} from "firebase/auth"
 import { useState, useEffect } from "react";
 import { 
-  getDoc,
-  doc, 
+  // getDoc,
+  // doc,
+  onSnapshot,
   collection,
   query,
-  where,
-  onSnapshot
+  where
 } from "firebase/firestore";
 import { db } from "../firebase";
 import DriverRiding from "./DriverRiding";
@@ -24,44 +24,42 @@ export default function App(){
 
   const auth = getAuth(); 
 
-    useEffect(() => {
-        const user = auth.currentUser
-        const usersRef = collection(db, "users")
-        if(user){
-        const q = query(usersRef,   where("email", "==", user.email));
-
-        const unsubscribe =  onSnapshot(q, (snapshot) => {
-            snapshot.forEach((doc) => {
-              setIsRiding(doc.data().isRiding)
-            })
-        })    
-
-        return () => unsubscribe();
-        }
-
-    }, [signedIn, auth.currentUser]);  
 
   
-  if (signedIn){
-    const user = auth.currentUser
-    const userRef = doc(db, "users", user.uid)
-    fetchUserData(userRef);
-  }
+  // if (signedIn){
+  //   const user = auth.currentUser
+  //   // const userRef = doc(db, "users", user.uid)
+  //   // fetchUserData(user);
+  // }
 
-    if (signedIn){
-    const user = auth.currentUser
-    const userRef = doc(db, "users", user.uid)
-    fetchUserData(userRef);  
-  }
+    useEffect(() => {
+        
+        if(auth.currentUser){
+          const usersRef = collection(db, "users")
+          const q = query(usersRef,   where("email", "==", auth.currentUser.email));
 
-  async function fetchUserData(userRef){
-    const userSnap = await getDoc(userRef)
+          const unsubscribe =  onSnapshot(q, (snapshot) => {
+              snapshot.forEach((doc) => {
+                  setIsDriving(doc.data().isDriving)
+                  setIsRiding(doc.data().isRiding)
+              })
+          })    
 
-    if(userSnap.exists()){
-      const userData = userSnap.data()
-      setIsDriving(userData.isDriving)
-    }
-  }
+          return () => unsubscribe();
+        }
+
+    }, [signedIn]);    
+
+
+  // async function fetchUserData(userRef){
+  //   const userSnap = await getDoc(userRef)
+
+  //   if(userSnap.exists()){
+  //     const userData = userSnap.data()
+  //     setIsDriving(userData.isDriving)
+  //     setIsRiding(userData.isRiding)
+  //   }
+  // }
 
   
   onAuthStateChanged(auth, (user) => {
@@ -74,18 +72,18 @@ export default function App(){
     setRole(value)
   }
 
-  console.log(isRiding)
+
   return(
     <>
     {signedIn ? 
-    role === "" ? 
+    role === "" &&!isRiding &&!isDriving? 
   <Role  onClick = {handleRole}/>:
     null:
     <Banner />}
 
 
-    {signedIn && role ?
-    role === "rider" ?
+    {signedIn && role &&!isDriving && !isRiding?
+    role === "rider"?
     <SubmitRide /> : 
     !isDriving ?
     <AcceptRide /> : 
