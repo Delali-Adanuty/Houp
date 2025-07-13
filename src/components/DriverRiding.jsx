@@ -34,10 +34,27 @@ export default function DriverRiding(){
         }, {merge:true})        
     }
 
+    function completeRide(){
+        setDoc(doc(db, "rides", currentRide.id), {
+            status:"Completed"
+        }, {merge:true})    
+        setDoc(doc(db, "users", user.uid), {
+            isDriving:false
+        }, {merge:true})
+    }
+
     return(
         <section className="driver-riding">
             <h1>Ride Status: {currentRide.status}</h1>
-            <button onClick={confirmPickup}>Confirm Pickup</button>
+            {currentRide.status === "Awaiting Pickup" ? 
+            <button onClick={confirmPickup}>Confirm Pickup</button> :
+            null
+            }
+            {currentRide.status === "Heading to Destination" ? 
+            <button onClick={completeRide}>Drop off {currentRide.riderName.split(' ')[0]}</button> :
+            null
+            }
+            
         </section>
     )
 }

@@ -4,7 +4,9 @@ import {
     collection,
     query,
     where,
-    onSnapshot
+    onSnapshot,
+    setDoc,
+    doc
  } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -14,14 +16,23 @@ export default function UserRiding(){
     const user = auth.currentUser;
     const [currentRide, setCurrentRide] = useState({})
 
+    
+
     useEffect(() => {
         const ridesRef = collection(db, "rides")
         const q = query(ridesRef,   where("riderId", "==", user.uid));
+
+
 
         const unsubscribe =  onSnapshot(q, (snapshot) => {
             snapshot.forEach((doc) => {
                 setCurrentRide(doc.data())
             })
+            if(currentRide.status === "Completed"){
+                setDoc(doc(db, "users", user.uid), {
+                    isRiding:false
+                }, {merge:true})
+            }
         })    
 
         return () => unsubscribe();
