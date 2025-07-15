@@ -82,7 +82,8 @@ section.form a{
 section form button,
 section.role button,
 section.rides div.ride button,
-section.driver-riding button{
+section.driver-riding button,
+section.rider-riding button{
     margin-top: 2.4rem;
     border:none;
     outline: none;
@@ -126,7 +127,8 @@ section.role{
 }
 
 section.role button,
-section.driver-riding button{
+section.driver-riding button,
+section.rider-riding button{
     padding:1rem;
     margin:.5rem .9rem;
     opacity: .87;
@@ -181,7 +183,30 @@ section.rides div.ride button{
     align-self: center;
 }
 
+section.rider-riding,
+section.driver-riding{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
 
+section.rider-riding div,
+section.driver-riding div{
+    border-radius:1rem;
+    display: grid;
+    padding:.9rem;
+    padding-top:1.1rem;
+}
+
+section.rider-riding div h1,
+section.driver-riding div h1{
+    text-align: center;
+    margin-top: .7rem;
+    margin-bottom:.7rem;
+}
 
 @media only screen and (max-width: 420px) {
     .banner{
@@ -211,4 +236,8 @@ section.rides div.ride button{
         width:23rem
     }    
 
+    section.rider-riding div,
+    section.driver-riding div{
+        width:100vw;
+    }
 }

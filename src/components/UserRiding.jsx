@@ -16,19 +16,23 @@ export default function UserRiding(){
     const user = auth.currentUser;
     const [currentRide, setCurrentRide] = useState({})
 
-    
+    function cancelRide(){
+        console.log('ei')
+        setDoc(doc(db, "rides", currentRide.id), {
+            status:"Cancelled"
+        }, {merge:true})    
+    }
 
     useEffect(() => {
         const ridesRef = collection(db, "rides")
-        const q = query(ridesRef,   where("riderId", "==", user.uid));
-
+        const q = query(ridesRef,   where("riderId", "==", user.uid), where("status", "not-in", ["Cancelled", "Completed"]));
 
 
         const unsubscribe =  onSnapshot(q, (snapshot) => {
             snapshot.forEach((doc) => {
-                setCurrentRide(doc.data())
+                setCurrentRide({id:doc.id, ...doc.data()})
             })
-            if(currentRide.status === "Completed"){
+            if(currentRide.status === "Completed" || currentRide.status === "Cancelled"){
                 setDoc(doc(db, "users", user.uid), {
                     isRiding:false
                 }, {merge:true})
@@ -36,11 +40,14 @@ export default function UserRiding(){
         })    
 
         return () => unsubscribe();
-    }, []);        
+    }, [user.uid]);        
     
     return(
         <section className="rider-riding">
-            <p>Ride Status: {currentRide.status}</p>
+            <div>
+                <h1>{currentRide.status}...</h1>
+                <button onClick={cancelRide}>Cancel Ride</button>
+            </div>
         </section>
     )
 }

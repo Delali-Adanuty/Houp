@@ -5,8 +5,6 @@ import Role from "./Role";
 import {getAuth, onAuthStateChanged} from "firebase/auth"
 import { useState, useEffect } from "react";
 import { 
-  // getDoc,
-  // doc,
   onSnapshot,
   collection,
   query,
@@ -49,17 +47,6 @@ export default function App(){
         }
 
     }, [signedIn]);    
-
-
-  // async function fetchUserData(userRef){
-  //   const userSnap = await getDoc(userRef)
-
-  //   if(userSnap.exists()){
-  //     const userData = userSnap.data()
-  //     setIsDriving(userData.isDriving)
-  //     setIsRiding(userData.isRiding)
-  //   }
-  // }
 
   
   onAuthStateChanged(auth, (user) => {

@@ -15,9 +15,17 @@ export default function DriverRiding(){
     const user = auth.currentUser
     const [currentRide, setCurrentRide] = useState({})
 
+    if(currentRide.status === "Cancelled"){
+        setTimeout(() => {
+            setDoc(doc(db, "users", user.uid), {
+                isDriving:false
+            }, {merge:true})            
+        }, 3000)
+    }
+
     useEffect(() => {
         const ridesRef = collection(db, "rides")
-        const q = query(ridesRef,   where("driverId", "==", user.uid));
+        const q = query(ridesRef,   where("driverId", "==", user.uid), where("status", "not-in", ["Cancelled", "Completed"]));
 
         const unsubscribe =  onSnapshot(q, (snapshot) => {
             snapshot.forEach((doc) => {
@@ -45,16 +53,17 @@ export default function DriverRiding(){
 
     return(
         <section className="driver-riding">
-            <h1>Ride Status: {currentRide.status}</h1>
-            {currentRide.status === "Awaiting Pickup" ? 
-            <button onClick={confirmPickup}>Confirm Pickup</button> :
-            null
-            }
-            {currentRide.status === "Heading to Destination" ? 
-            <button onClick={completeRide}>Drop off {currentRide.riderName.split(' ')[0]}</button> :
-            null
-            }
-            
+                <div>
+                <h1>{currentRide.status}...</h1>
+                {currentRide.status === "Awaiting Pickup" ? 
+                <button onClick={confirmPickup}>Confirm Pickup</button> :
+                null
+                }
+                {currentRide.status === "Heading to Destination" ? 
+                <button onClick={completeRide}>Drop off {currentRide.riderName.split(' ')[0]}</button> :
+                null
+                }
+            </div>
         </section>
     )
 }

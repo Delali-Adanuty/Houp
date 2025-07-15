@@ -17,7 +17,7 @@ export default function AcceptRide(){
 
     useEffect(() => {
         const ridesRef = collection(db, "rides")
-        const q = query(ridesRef,   where("status", "==", "requested"));
+        const q = query(ridesRef,   where("status", "==", "Looking for a driver"));
 
         const unsubscribe =  onSnapshot(q, (snapshot) => {
             const newRides = []

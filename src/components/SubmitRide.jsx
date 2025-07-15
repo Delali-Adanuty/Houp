@@ -29,7 +29,7 @@ export default function SubmitRide(){
                 riderName: user.displayName,
                 pickupLocation: pickupLocation,
                 dropoffLocation: dropoffLocation,
-                status: "requested",
+                status: "Looking for a driver",
                 requestedAt:serverTimestamp(),
                 riderId: user.uid,
                 riderEmail:user.email
