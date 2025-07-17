@@ -6,7 +6,9 @@ import {
     where,
     onSnapshot,
     setDoc,
-    doc
+    doc,
+    orderBy,
+    limit
  } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -17,36 +19,61 @@ export default function UserRiding(){
     const [currentRide, setCurrentRide] = useState({})
 
     function cancelRide(){
-        console.log('ei')
         setDoc(doc(db, "rides", currentRide.id), {
             status:"Cancelled"
-        }, {merge:true})    
+        }, {merge:true})  
+        setDoc(doc(db, "users", user.uid), {
+            isRiding:false,
+            currentRole:""
+        }, {merge:true})          
     }
 
     useEffect(() => {
         const ridesRef = collection(db, "rides")
-        const q = query(ridesRef,   where("riderId", "==", user.uid), where("status", "not-in", ["Cancelled", "Completed"]));
-
+        const q = query(ridesRef, 
+            where("riderId", "==", user.uid),
+            orderBy("requestedAt", "desc"),
+            limit(1)
+    );
 
         const unsubscribe =  onSnapshot(q, (snapshot) => {
-            snapshot.forEach((doc) => {
-                setCurrentRide({id:doc.id, ...doc.data()})
-            })
-            if(currentRide.status === "Completed" || currentRide.status === "Cancelled"){
-                setDoc(doc(db, "users", user.uid), {
-                    isRiding:false
-                }, {merge:true})
+            if(!snapshot.empty){
+                const rideData = {id:snapshot.docs[0].id, ...snapshot.docs[0].data()}; 
+                setCurrentRide(rideData)
             }
+            
         })    
 
         return () => unsubscribe();
-    }, [user.uid]);        
+    }, [user.uid]);   
+    
+    useEffect(() => {
+        if(currentRide.status === "Cancelled"){
+            setDoc(doc(db, "users", user.uid), {
+                isRiding:false,
+                currentRole:""
+            }, {merge:true})
+        }
+
+        if(currentRide.status === "Dropped off" || currentRide.status === "Completed"){
+            setTimeout(() => {
+                setDoc(doc(db, "users", user.uid), {
+                    isRiding:false,
+                    currentRole:""
+                }, {merge:true})
+            }, 2000)
+        }
+    }, [currentRide, user.uid])
     
     return(
         <section className="rider-riding">
             <div>
                 <h1>{currentRide.status}...</h1>
-                <button onClick={cancelRide}>Cancel Ride</button>
+                {currentRide.status != "Dropped off" ? 
+                <button onClick={cancelRide}>Cancel Ride</button>:
+                null
+            }
+                
             </div>
         </section>
     )

@@ -35,7 +35,8 @@ export default function Form(){
                         name:nameInput,
                         createdAt: serverTimestamp(),
                         isDriving:false,
-                        isRiding:false
+                        isRiding:false,
+                        currentRole:""
                     })
                 }catch(error){
                     setErrorMessage(error.message)

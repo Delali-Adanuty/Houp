@@ -7,34 +7,57 @@ import {
      query,
      onSnapshot, 
      setDoc,
-     doc
+     doc,
+     orderBy,
+     limit
     } from "firebase/firestore";
+
 
 export default function DriverRiding(){
     const auth = getAuth();
     const user = auth.currentUser
     const [currentRide, setCurrentRide] = useState({})
 
-    if(currentRide.status === "Cancelled"){
-        setTimeout(() => {
-            setDoc(doc(db, "users", user.uid), {
-                isDriving:false
-            }, {merge:true})            
-        }, 3000)
-    }
-
     useEffect(() => {
         const ridesRef = collection(db, "rides")
-        const q = query(ridesRef,   where("driverId", "==", user.uid), where("status", "not-in", ["Cancelled", "Completed"]));
+        const q = query(ridesRef,   
+            where("driverId", "==", user.uid),
+            orderBy("requestedAt", "desc"),
+            limit(1)
+            );
 
         const unsubscribe =  onSnapshot(q, (snapshot) => {
-            snapshot.forEach((doc) => {
-                setCurrentRide({id:doc.id, ...doc.data()});
-            })
+
+            if(!snapshot.empty){
+                const rideData = {id:snapshot.docs[0].id, ...snapshot.docs[0].data()}; 
+                setCurrentRide(rideData)
+            }
         })    
 
         return () => unsubscribe();
-    }, []); 
+    }, [user.uid]);      
+
+
+    useEffect(() => {
+        if(currentRide.status === "Completed"){
+            setDoc(doc(db, "users", user.uid), {
+                isDriving:false,
+                currentRole:""
+            }, {merge:true})
+        }    
+
+        if(currentRide.status === "Cancelled"){
+            alert(`${currentRide.riderName.split(' ')[0]} cancelled the ride`)
+            setTimeout(() => {
+                setDoc(doc(db, "users", user.uid), {
+                    isDriving:false,
+                    currentRole:""
+                }, {merge:true})            
+            }, 2000)
+        }    
+    }, [currentRide, user.uid])
+    
+
     
     function confirmPickup(){
         setDoc(doc(db, "rides", currentRide.id), {
@@ -44,11 +67,19 @@ export default function DriverRiding(){
 
     function completeRide(){
         setDoc(doc(db, "rides", currentRide.id), {
-            status:"Completed"
+            status:"Dropped off"
         }, {merge:true})    
-        setDoc(doc(db, "users", user.uid), {
-            isDriving:false
-        }, {merge:true})
+
+
+        setTimeout(() => {
+            setDoc(doc(db, "rides", currentRide.id), {
+                status:"Completed"
+            }, {merge:true})   
+            setDoc(doc(db, "users", user.uid), {
+                isDriving:false,
+                currentRole:""
+            }, {merge:true})              
+        }, 2000)
     }
 
     return(

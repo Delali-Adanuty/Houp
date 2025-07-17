@@ -22,14 +22,6 @@ export default function App(){
 
   const auth = getAuth(); 
 
-
-  
-  // if (signedIn){
-  //   const user = auth.currentUser
-  //   // const userRef = doc(db, "users", user.uid)
-  //   // fetchUserData(user);
-  // }
-
     useEffect(() => {
         
         if(auth.currentUser){
@@ -40,6 +32,7 @@ export default function App(){
               snapshot.forEach((doc) => {
                   setIsDriving(doc.data().isDriving)
                   setIsRiding(doc.data().isRiding)
+                  setRole(doc.data().currentRole)
               })
           })    
 
@@ -55,16 +48,13 @@ export default function App(){
     }
   })
 
-  function handleRole(value){
-    setRole(value)
-  }
 
 
   return(
     <>
     {signedIn ? 
     role === "" &&!isRiding &&!isDriving? 
-  <Role  onClick = {handleRole}/>:
+  <Role/>:
     null:
     <Banner />}
 
