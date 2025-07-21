@@ -13,6 +13,7 @@ import {
 import { db } from "../firebase";
 import DriverRiding from "./DriverRiding";
 import UserRiding from "./UserRiding";
+import Footer from "./Footer";
 
 export default function App(){
   const [signedIn, setSignedIn] = useState(false)
@@ -75,6 +76,11 @@ export default function App(){
     {isRiding ? 
     <UserRiding />:
     null}
+
+    {role === "" ?
+    <Footer /> : 
+    null
+    }
     </>
   )
 }

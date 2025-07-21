@@ -214,6 +214,16 @@ section.driver-riding div p{
     margin-bottom: 2rem;
 }
 
+footer{
+    position: fixed;
+    width:calc(100vw - 8rem);
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    padding:1.2rem 4rem;
+    border-top: 1px solid rgba(175, 173, 173, 0.534);
+}
+
 @media only screen and (max-width: 420px) {
     .banner{
         flex-direction: column;
