@@ -224,6 +224,18 @@ footer{
     border-top: 1px solid rgba(175, 173, 173, 0.534);
 }
 
+ul.close button.close-button{
+    border:none;
+    outline: none;
+    background-color: #202020;
+    color:white;
+}
+
+ul.close{
+    text-align: right;
+    padding: .75rem;
+}
+
 @media only screen and (max-width: 420px) {
     .banner{
         flex-direction: column;

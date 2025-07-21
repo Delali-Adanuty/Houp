@@ -9,6 +9,7 @@ import {
 import { getAuth } from "firebase/auth";
 import { db } from "../firebase";
 import { useState, useEffect } from "react";
+import FeatherIcon from "feather-icons-react";
 
 export default function AcceptRide(){
     const auth = getAuth()
@@ -55,8 +56,19 @@ export default function AcceptRide(){
         )
     })
 
+    function closeAcceptRide(){
+        setDoc(doc(db, "users", user.uid), {
+            currentRole:"",
+        }, {merge:true})               
+    }
+
     return(
         <>
+        <ul className="close">
+            <button className="close-button" onClick={closeAcceptRide}>
+                <FeatherIcon icon="x" size="30"/>
+            </button>
+        </ul>
         <h1 className="rides-heading">Active Rides</h1>
         <section className="rides">
             {requestedRides}

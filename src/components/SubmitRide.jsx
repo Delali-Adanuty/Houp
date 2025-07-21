@@ -8,6 +8,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
+import FeatherIcon from 'feather-icons-react'
 
 export default function SubmitRide(){
     const auth = getAuth();
@@ -39,7 +40,20 @@ export default function SubmitRide(){
             }, {merge:true})
         }
     }
+
+    function closeSubmitRide(){
+        setDoc(doc(db, "users", user.uid), {
+            currentRole:""
+        }, {merge:true})               
+    }
+
     return(
+        <>
+        <ul className="close">
+            <button className="close-button" onClick={closeSubmitRide}>
+                <FeatherIcon icon="x" size="30"/>
+            </button>
+        </ul>
         <section className="submit-ride">
             <form action={getData}>
                 {errorMessage && 
@@ -57,6 +71,7 @@ export default function SubmitRide(){
                 <input type="text" name="dropoff" id="dropoff" />
                 <button>Submit</button>
             </form>
-        </section>
+        </section>        
+        </>
     )
 }
