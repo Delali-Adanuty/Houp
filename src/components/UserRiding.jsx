@@ -69,6 +69,14 @@ export default function UserRiding(){
         <section className="rider-riding">
             <div>
                 <h1>{currentRide.status}...</h1>
+                {currentRide.status === "Awaiting Pickup" ? 
+                <p>{currentRide.driverName.split(' ')[0]} will pick you up in {3} minutes</p>:
+                null
+                }
+                {currentRide.status === "Heading to Destination" ? 
+                <p>Arrive at 12:32pm</p> :
+                null
+                }
                 {currentRide.status != "Dropped off" ? 
                 <button onClick={cancelRide}>Cancel Ride</button>:
                 null

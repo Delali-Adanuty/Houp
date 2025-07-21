@@ -208,6 +208,12 @@ section.driver-riding div h1{
     margin-bottom:.7rem;
 }
 
+section.rider-riding div p,
+section.driver-riding div p{
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
 @media only screen and (max-width: 420px) {
     .banner{
         flex-direction: column;

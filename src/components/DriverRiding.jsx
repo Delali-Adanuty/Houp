@@ -87,11 +87,19 @@ export default function DriverRiding(){
                 <div>
                 <h1>{currentRide.status}...</h1>
                 {currentRide.status === "Awaiting Pickup" ? 
-                <button onClick={confirmPickup}>Confirm Pickup</button> :
+                <>
+                <p>Pick up {currentRide.riderName.split(' ')[0]} in {3} minutes</p>
+                <button onClick={confirmPickup}>Confirm Pickup</button>
+                </>
+                 :
                 null
                 }
                 {currentRide.status === "Heading to Destination" ? 
-                <button onClick={completeRide}>Drop off {currentRide.riderName.split(' ')[0]}</button> :
+                <>
+                <p>Drop off at 12:32pm</p>
+                <button onClick={completeRide}>Drop off {currentRide.riderName.split(' ')[0]}</button>
+                </>
+                 :
                 null
                 }
             </div>

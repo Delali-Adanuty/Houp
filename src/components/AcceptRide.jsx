@@ -17,7 +17,7 @@ export default function AcceptRide(){
 
     useEffect(() => {
         const ridesRef = collection(db, "rides")
-        const q = query(ridesRef,   where("status", "==", "Looking for a driver"));
+        const q = query(ridesRef,   where("status", "==", "Looking for a driver"));        
 
         const unsubscribe =  onSnapshot(q, (snapshot) => {
             const newRides = []
@@ -27,14 +27,15 @@ export default function AcceptRide(){
             setActiveRides(newRides)
         })    
 
+
         return () => unsubscribe();
     }, []);
-
 
     async function AcceptRide(rideId){
         setDoc(doc(db, "rides", rideId), {
             driverId:user.uid,
-            status:"Awaiting Pickup"
+            status:"Awaiting Pickup",
+            driverName:user.displayName
         }, {merge:true})
         setDoc(doc(db, "users", user.uid), {
             isDriving:true
