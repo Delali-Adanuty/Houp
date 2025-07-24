@@ -70,7 +70,6 @@ export default function Form(){
 
     function googleSignup(e){
         e.preventDefault();
-        console.log('google')
         signInWithPopup(auth, provider)
         .then((result) => {
             const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -134,8 +133,8 @@ export default function Form(){
                     </a>
                 </div>
                 <hr />
+                <button onClick={googleSignup} className="auth">Sign in with Google</button>
             </form>
-            <button onClick={googleSignup} className="auth">Sign in with Google</button>
         </section>
     )
 }
