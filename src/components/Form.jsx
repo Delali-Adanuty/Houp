@@ -68,7 +68,8 @@ export default function Form(){
         })
     }
 
-    function googleSignup(){
+    function googleSignup(e){
+        e.preventDefault();
         console.log('google')
         signInWithPopup(auth, provider)
         .then((result) => {
