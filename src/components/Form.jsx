@@ -134,8 +134,8 @@ export default function Form(){
                     </a>
                 </div>
                 <hr />
-                <button onClick={googleSignup} className="auth">Sign in with Google</button>
             </form>
+            <button onClick={googleSignup} className="auth">Sign in with Google</button>
         </section>
     )
 }
