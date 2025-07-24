@@ -108,7 +108,8 @@ section form button,
 section.role button,
 section.rides div.ride button,
 section.driver-riding button,
-section.rider-riding button{
+section.rider-riding button,
+section.form button{
     margin-top: 2.4rem;
     border:none;
     outline: none;
@@ -119,6 +120,10 @@ section.rider-riding button{
     background-color: white;
     color:black;
     margin-bottom: 1rem;
+}
+
+section.form hr{
+    margin-top:2rem
 }
 
 section.submit-ride{

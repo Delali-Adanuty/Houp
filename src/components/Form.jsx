@@ -2,7 +2,9 @@ import {app, db} from "../firebase";
 import {getAuth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    updateProfile
+    updateProfile,
+    GoogleAuthProvider,
+    signInWithPopup
 } from "firebase/auth"
 import { useState } from "react";
 import {doc, serverTimestamp, setDoc } from "firebase/firestore";
@@ -12,6 +14,8 @@ export default function Form(){
     const auth = getAuth(app);
     const [errorMessage, setErrorMessage] = useState('');
     const [action, setAction] = useState("signup")
+
+    const provider = new GoogleAuthProvider();
 
 
     async function getData(formData){
@@ -61,6 +65,18 @@ export default function Form(){
             }else{
                 return "signup"
             }
+        })
+    }
+
+    function googleSignup(){
+        console.log('google')
+        signInWithPopup(auth, provider)
+        .then((result) => {
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+        }).catch((error) => {
+            const errorCode = error.code
+            const errorMessage = error.message
         })
     }
 
@@ -116,6 +132,8 @@ export default function Form(){
                         {action === "signup" ? "Already have an account? Log In" : "Create Account"}
                     </a>
                 </div>
+                <hr />
+                <button onClick={googleSignup} className="auth">Sign in with Google</button>
             </form>
         </section>
     )
