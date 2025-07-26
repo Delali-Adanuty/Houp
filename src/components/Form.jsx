@@ -28,10 +28,8 @@ export default function Form(){
         sendSignInLinkToEmail(auth, email, actionCodeSettings)
         .then(() => {
             window.localStorage.setItem("emailForSignIn", email);
-            console.log("test")
         }).catch((error) => {
             setErrorMessage(error.message)
-            console.log(error.message);
         })        
     }
 
