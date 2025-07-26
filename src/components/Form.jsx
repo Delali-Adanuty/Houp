@@ -22,7 +22,7 @@ export default function Form(){
 
     function verifyEmail(email){
         const actionCodeSettings = {
-            url: "http://localhost:8888/",
+            url: "https://houp.netlify.app/",
             handleCodeInApp:true,
         }
         sendSignInLinkToEmail(auth, email, actionCodeSettings)
