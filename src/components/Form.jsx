@@ -30,6 +30,8 @@ export default function Form(){
             window.localStorage.setItem("emailForSignIn", email);
             console.log("test")
         }).catch((error) => {
+            alert(error.message)
+            alert(error.code)
             setErrorMessage(error.message)
         })        
     }
