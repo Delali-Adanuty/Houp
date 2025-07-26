@@ -10,6 +10,7 @@ export default function Role(){
     const auth = getAuth();
     const user = auth.currentUser;
 
+
     function setRole(role){
         setDoc(doc(db, "users", user.uid), {
             currentRole:role

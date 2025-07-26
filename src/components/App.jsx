@@ -19,8 +19,8 @@ import Navbar from "./Navbar";
 export default function App(){
   const [signedIn, setSignedIn] = useState(false)
   const [role, setRole] = useState('');
-  const [isDriving, setIsDriving]  = useState(false)
-  const [isRiding, setIsRiding] = useState(false)
+  const [isDriving, setIsDriving]  = useState(false);
+  const [isRiding, setIsRiding] = useState(false);
 
   const auth = getAuth(); 
 

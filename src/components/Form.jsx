@@ -4,7 +4,10 @@ import {getAuth,
     signInWithEmailAndPassword,
     updateProfile,
     GoogleAuthProvider,
-    signInWithPopup
+    signInWithPopup,
+    sendSignInLinkToEmail,
+    signOut,
+    sendPasswordResetEmail
 } from "firebase/auth"
 import { useState } from "react";
 import {doc, serverTimestamp, setDoc } from "firebase/firestore";
@@ -17,37 +20,70 @@ export default function Form(){
 
     const provider = new GoogleAuthProvider();
 
+    function verifyEmail(email){
+        const actionCodeSettings = {
+            url: "http://localhost:8888/",
+            handleCodeInApp:true,
+        }
+        sendSignInLinkToEmail(auth, email, actionCodeSettings)
+        .then(() => {
+            window.localStorage.setItem("emailForSignIn", email);
+        }).catch((error) => {
+            setErrorMessage(error.message)
+        })        
+    }
+
+    async function createUser(user, userName){
+                    await setDoc(doc(db, "users", user.uid), {
+                        email:user.email,
+                        name:userName,
+                        createdAt: serverTimestamp(),
+                        isDriving:false,
+                        isRiding:false,
+                        currentRole:""
+                    })        
+    }
+
 
     async function getData(formData){
         const emailInput = formData.get("email");
         const passwordInput = formData.get("password");
         const nameInput = formData.get("name")
-        if (action === "signup"){
+        
+        if(action === "reset"){
+            sendPasswordResetEmail(auth, emailInput)
+            .then(() => {
+                location.reload()
+            })
+            .catch((error) => {
+                setErrorMessage(error.message)
+            })
+        }
+        else if (action === "signup"){
             const confirmPasswordInput = formData.get("confirm-password");
 
-            if(passwordInput == confirmPasswordInput){
-                try{
-                    const userCredential = await createUserWithEmailAndPassword(auth, emailInput, passwordInput)
-                    const user = userCredential.user
+            if(emailInput.endsWith(".edu")){
+                if(passwordInput == confirmPasswordInput){
+                    try{
+                        const userCredential = await createUserWithEmailAndPassword(auth, emailInput, passwordInput)
+                        const user = userCredential.user
 
-                     updateProfile(auth.currentUser, {
-                        displayName:nameInput
-                    });
-                    
-                    await setDoc(doc(db, "users", user.uid), {
-                        email:user.email,
-                        name:nameInput,
-                        createdAt: serverTimestamp(),
-                        isDriving:false,
-                        isRiding:false,
-                        currentRole:""
-                    })
-                }catch(error){
-                    setErrorMessage(error.message)
-                }
+                        updateProfile(auth.currentUser, {
+                            displayName:nameInput
+                        });
+
+                        createUser(user, nameInput)
+                        verifyEmail(user.email);
+                    }catch(error){
+                        setErrorMessage(error.message)
+                    }
+                }else{
+                    setErrorMessage("Please the passwords are not the same")
+                }                
             }else{
-                setErrorMessage("Please the passwords are not the same")
+                setErrorMessage("Please sign up with your student email")
             }
+
         }else{
             try{
                 await signInWithEmailAndPassword(auth, emailInput, passwordInput)
@@ -58,25 +94,41 @@ export default function Form(){
 
     }
 
-    function switchAction(){
-        setAction(prev => {
-            if (prev === "signup"){
-                return "signin"
-            }else{
-                return "signup"
-            }
-        })
+    function switchAction(data){
+        if(data){
+            setAction(data)
+        }else{
+            setAction(prev => {
+                if (prev === "signup"){
+                    return "signin"
+                }else{
+                    return "signup"
+                }
+            })
+        }
     }
 
-    function googleSignup(e){
+async  function googleSignup(e){
         e.preventDefault();
         signInWithPopup(auth, provider)
         .then((result) => {
-            const credential = GoogleAuthProvider.credentialFromResult(result);
-            const token = credential.accessToken;
+            const isNewUser = result._tokenResponse?.isNewUser;
+            const email = (result.user.email)
+            if(email.endsWith(".edu")){
+                if(isNewUser){
+                    verifyEmail(email)
+                }
+                const user = result.user;
+                createUser(result.user, user.displayName)
+            }else{
+                signOut(auth)
+                .then(() => {
+                    location.reload()
+                    alert("Please use a student email")
+                })
+            }
         }).catch((error) => {
-            const errorCode = error.code
-            const errorMessage = error.message
+            setErrorMessage(error.message);
         })
     }
 
@@ -88,7 +140,13 @@ export default function Form(){
                         {errorMessage}
                     </div>
                 }
-                <h1>Create an Account to start Houping!</h1>
+                {action === "signup" ?
+                <h1>Create an Account to start Houping!</h1> : 
+                action === "signin" ? 
+                <h1>Log into your account !</h1> :
+                <h1>Reset your password</h1>
+            }
+                
                 {action === "signup" && 
                 <>
                     <label htmlFor="name">Enter your name:</label>
@@ -99,7 +157,7 @@ export default function Form(){
                     required
                     placeholder="John Doe" />                
                 </>
-}
+                }
                 <label htmlFor="email">Enter your email:</label>
                 <input 
                 type="email" 
@@ -107,13 +165,17 @@ export default function Form(){
                 placeholder="johndoe@example.com"
                 id="email"
                 />
-                <label htmlFor="password">Enter your password: </label>
-                <input 
-                type="password" 
-                name="password"
-                placeholder="securepassword@1"
-                id="password"
-                />
+                {action != "reset" &&
+                <>
+                    <label htmlFor="password">Enter your password: </label>
+                    <input 
+                    type="password" 
+                    name="password"
+                    placeholder="securepassword@1"
+                    id="password"
+                    />
+                </>
+                }
                 {action === "signup" &&
                 <>
                     <label htmlFor="confirm-password">Confirm your password: </label>
@@ -126,11 +188,18 @@ export default function Form(){
                 </>
                 }
 
-                <button>{action==="signin" ? "Sign In" : "Create Account"}</button>
-                <div>
-                    <a href="#!" className="switch" onClick={switchAction}>
-                        {action === "signup" ? "Already have an account? Log In" : "Create Account"}
-                    </a>
+                <button>{action==="signin" ? "Sign In" : action === "signup" ? "Create Account" : "Reset password"}</button>
+                <div>         
+                    {action != "reset" &&
+                    <>
+                        <a href="#!" className="switch" onClick={() => switchAction('reset')}>
+                            {action === "signup" ?null : "Reset Password"}
+                        </a>                                              
+                    </>
+                    }
+                        <a href="#!" className="switch" onClick={() => switchAction('')}>
+                            {action === "signup" ? "Already have an account? Log In" : "Create Account"}
+                        </a>                       
                 </div>
                 <hr />
                 <button onClick={googleSignup} className="auth">Sign in with Google</button>

@@ -78,6 +78,11 @@ section.form form .error-block{
 
 section form{
     display: grid;
+    width:21rem;
+}
+
+section form h1{
+    text-align: center;
 }
 
 section form input{
@@ -100,8 +105,19 @@ section form label{
     margin-bottom: .4rem;
 }
 
+section.form form div{
+    display: flex;
+    flex-direction: column;
+}
+
 section.form a{
     color:white;
+    margin-bottom: .7rem;
+    text-decoration: none;
+}
+
+section.form a:hover{
+    text-decoration: underline;
 }
 
 section form button,
@@ -275,6 +291,11 @@ ul.close{
 
     .banner ul.left{
         margin-bottom: 2rem;
+    }
+
+    section form{
+        border:none;
+        width: 88vw;
     }
 
     section.submit-ride section{
