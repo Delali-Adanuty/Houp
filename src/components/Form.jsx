@@ -6,8 +6,8 @@ import {getAuth,
     GoogleAuthProvider,
     signInWithPopup,
     sendSignInLinkToEmail,
-    signOut,
-    sendPasswordResetEmail
+    sendPasswordResetEmail,
+    deleteUser
 } from "firebase/auth"
 import { useState } from "react";
 import {doc, serverTimestamp, setDoc } from "firebase/firestore";
@@ -30,8 +30,6 @@ export default function Form(){
             window.localStorage.setItem("emailForSignIn", email);
             console.log("test")
         }).catch((error) => {
-            alert(error.message)
-            alert(error.code)
             setErrorMessage(error.message)
         })        
     }
@@ -124,10 +122,16 @@ async  function googleSignup(e){
                 const user = result.user;
                 createUser(result.user, user.displayName)
             }else{
-                signOut(auth)
+                const user = auth.currentUser
+
+                deleteUser(user)
                 .then(() => {
-                    location.reload()
-                    alert("Please use a student email")
+                    //Successfully deleted
+                    setErrorMessage("Please sign up with a student email")
+                    alert('Please sign up with a student email')
+                })
+                .catch((error) => {
+                    setErrorMessage(error.message)
                 })
             }
         }).catch((error) => {

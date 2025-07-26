@@ -47,6 +47,8 @@ export default function App(){
   onAuthStateChanged(auth, (user) => {
     if(user){
       setSignedIn(true)
+    }else{
+      setSignedIn(false)
     }
   })
 
