@@ -31,6 +31,7 @@ export default function Form(){
             console.log("test")
         }).catch((error) => {
             setErrorMessage(error.message)
+            console.log(error.message);
         })        
     }
 
