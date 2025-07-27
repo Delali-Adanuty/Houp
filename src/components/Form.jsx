@@ -5,9 +5,9 @@ import {getAuth,
     updateProfile,
     GoogleAuthProvider,
     signInWithPopup,
-    sendSignInLinkToEmail,
     sendPasswordResetEmail,
-    deleteUser
+    deleteUser,
+    sendEmailVerification
 } from "firebase/auth"
 import { useState } from "react";
 import {doc, serverTimestamp, setDoc } from "firebase/firestore";
@@ -25,7 +25,7 @@ export default function Form(){
             url: "https://houp.netlify.app/",
             handleCodeInApp:true,
         }
-        sendSignInLinkToEmail(auth, email, actionCodeSettings)
+        sendEmailVerification(auth.currentUser, actionCodeSettings)
         .then(() => {
             window.localStorage.setItem("emailForSignIn", email);
         }).catch((error) => {
