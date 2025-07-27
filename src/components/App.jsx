@@ -3,7 +3,7 @@ import SubmitRide from "./SubmitRide";
 import AcceptRide from "./AcceptRide";
 import Role from "./Role";
 import {getAuth, onAuthStateChanged} from "firebase/auth"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { 
   onSnapshot,
   collection,
@@ -15,12 +15,15 @@ import DriverRiding from "./DriverRiding";
 import UserRiding from "./UserRiding";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
+import Features from "./Features";
 
 export default function App(){
   const [signedIn, setSignedIn] = useState(false)
   const [role, setRole] = useState('');
   const [isDriving, setIsDriving]  = useState(false);
   const [isRiding, setIsRiding] = useState(false);
+
+  const bannerRef = useRef(null);
 
   const auth = getAuth(); 
 
@@ -52,6 +55,10 @@ export default function App(){
     }
   })
 
+  function showBanner(){
+    bannerRef.current?.scrollIntoView({behavior:"smooth"})
+  }
+
 
 
   return(
@@ -64,7 +71,11 @@ export default function App(){
     </>
   :
     null:
-    <Banner />}
+    <>
+    <Banner ref={bannerRef} />
+    <Features onClick={showBanner} />
+    </>
+    }
 
 
     {signedIn && role &&!isDriving && !isRiding?

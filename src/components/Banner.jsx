@@ -1,8 +1,8 @@
 import Form from "./Form"
-
-export default function Banner(){
+import { forwardRef } from "react"
+const Banner = forwardRef((props, ref) => {
     return(
-            <section className="banner">
+            <section ref={ref} className="banner">
                 <ul className="left">
                     <h1>Houp.</h1>
                     <p>Need a ride...  just houp!</p>
@@ -12,4 +12,6 @@ export default function Banner(){
                 </ul>
             </section>
     )
-}
+})
+
+export default Banner;
