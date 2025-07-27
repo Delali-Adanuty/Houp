@@ -1,3 +1,5 @@
+import pic from '../assets/images/360_F_102038045_1ropJBtqleEFaOu7V37WWpOe7ccUZM7R.jpg'
+
 export default function Features(props){
     return(
         <section className="features">
@@ -14,7 +16,7 @@ export default function Features(props){
             </div>
             <div className="card">
                 <ul className="right">
-                    <img src="../src/assets/images/360_F_102038045_1ropJBtqleEFaOu7V37WWpOe7ccUZM7R.jpg" alt="" />
+                    <img src={pic} alt="driver cartoon" />
                 </ul>
                 <ul className="left">
                     <h2>Offer a ride, shrink your footprint</h2>
