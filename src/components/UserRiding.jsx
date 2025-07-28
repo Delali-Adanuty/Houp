@@ -73,6 +73,12 @@ export default function UserRiding(){
                 <p>{currentRide.driverName.split(' ')[0]} will pick you up in {3} minutes</p>:
                 null
                 }
+                {currentRide.status === "Waiting for Passenger" ?
+                <p>
+                    {currentRide.driverName.split(' ')[0]} is waiting for you in a {currentRide.driverCar.carData.color} {currentRide.driverCar.carData.model} with plate {currentRide.driverCar.carData.plate}
+                </p>:
+                null
+                }
                 {currentRide.status === "Heading to Destination" ? 
                 <p>Arrive at 12:32pm</p> :
                 null

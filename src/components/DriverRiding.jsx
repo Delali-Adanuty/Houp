@@ -58,6 +58,11 @@ export default function DriverRiding(){
     }, [currentRide, user.uid])
     
 
+    function arriveAtPickup(){
+        setDoc(doc(db, "rides", currentRide.id), {
+            status:"Waiting for Passenger"
+        }, {merge:true})        
+    }    
     
     function confirmPickup(){
         setDoc(doc(db, "rides", currentRide.id), {
@@ -89,9 +94,15 @@ export default function DriverRiding(){
                 {currentRide.status === "Awaiting Pickup" ? 
                 <>
                 <p>Pick up {currentRide.riderName.split(' ')[0]} in {3} minutes</p>
-                <button onClick={confirmPickup}>Confirm Pickup</button>
+                <button onClick={arriveAtPickup}>Arrived at Pickup Location</button>
                 </>
                  :
+                null
+                }
+                {currentRide.status === "Waiting for Passenger" ?
+                <>
+                <button onClick={confirmPickup}>Confirm Pickup</button>
+                </> :
                 null
                 }
                 {currentRide.status === "Heading to Destination" ? 
