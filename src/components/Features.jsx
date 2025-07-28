@@ -27,7 +27,24 @@ export default function Features(props){
                     </p>
                     <button onClick={props.onClick}>Sign up and drive!</button>
                 </ul>                
-            </div>            
+            </div>    
+            <div className="card">
+                <ul className="left">
+                    <h2>What is Houp?</h2>
+                    <p className='text'>
+                        A ride sharing service that helps students get around campus and town safely, easily and for free. Whether you need a ride or want to offer one, 
+                        Houp connects you with other students going the same way. No fees, no strangers, just your campus community helping each other out!
+                    </p>
+                </ul>
+                <ul className="right">
+                    <h2>How does it work?</h2>
+                    <ol>
+                        <li>Create an accout with your student email address</li>
+                        <li>Choose your role(passenger or driver)</li>
+                        <li>Match up and Houp to your destination!</li>
+                    </ol>
+                </ul>
+            </div>        
         </section>
     )
 }

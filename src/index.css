@@ -93,7 +93,8 @@ section.features div.card ul img{
 }
 
 section.features div.card ul h2,
-section.features div.card ul p{
+section.features div.card ul p,
+section.features div.card ul ol{
     margin-left: 2rem;
 }
 
@@ -102,9 +103,15 @@ section.features div.card ul h2{
     margin-bottom: 2rem;
 }
 
-section.features div.card ul p{
+section.features div.card ul p,
+section.features div.card ul ol{
     font-size: 1.1rem;
     line-height: 1.9rem;
+}
+
+section.features div.card ul p.text,
+section.features div.card ul ol{
+    height: 10rem;
 }
 
 section.features div.card ul button{
@@ -375,5 +382,9 @@ ul.close{
     section.features div.card ul p,
     section.features div.card ul button{
         margin-left: 0;
+    }
+
+    section.features div.card ul.right{
+        margin-top: 3rem;
     }
 }
