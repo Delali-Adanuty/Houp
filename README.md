@@ -78,3 +78,16 @@ Live Sync: Both users receive an instant notification/UI update showing the matc
 Coordination: Using the real-time data, the driver picks up the student at the designated campus spot.
 
 Completion: Once the trip is over, the driver marks it as complete, clearing the entry from the active pool.
+
+<br>
+<h3>
+  Project Evolution
+</h3>
+This repository represents Version 1.0 (MVP) of Houp. To support more complex ride-matching logic, relational data, and better scalability, the backend has been migrated to a dedicated high-performance API.
+
+Current Iteration: This repo (React + Firebase NoSQL).
+
+Version 2.0 (In Development): High-performance backend using FastAPI, SQLModel (PostgreSQL), and Pydantic.
+View the FastAPI Backend Repository here:
+
+https://github.com/Delali-Adanuty/houp-api
